@@ -1,11 +1,13 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-  </div>
+  <main>
+    <Categories />
+  </main>
 </template>
 
 <script>
+import Categories from "../components/Categories.vue";
 export default {
+  components: { Categories },
   name: "Home",
 };
 </script>
