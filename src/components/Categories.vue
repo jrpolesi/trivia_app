@@ -51,7 +51,7 @@ export default {
           backgroundColor: "purple",
         },
         {
-          id: 16,
+          id: 17,
           name: "Science & Nature",
           image: "./assets/icons/science.svg",
           backgroundColor: "orange",
@@ -61,7 +61,6 @@ export default {
   },
   methods: {
     redirectToGame(categoryId) {
-      console.log(categoryId);
       this.$router.push({ name: "Trivia", params: { id: categoryId } });
     },
   },
