@@ -27,12 +27,6 @@ export default {
           backgroundColor: "blue",
         },
         {
-          id: 10,
-          name: "Books",
-          image: "./assets/icons/book.svg",
-          backgroundColor: "green",
-        },
-        {
           id: 11,
           name: "Film",
           image: "./assets/icons/film.svg",
