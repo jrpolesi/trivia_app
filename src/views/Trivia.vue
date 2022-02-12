@@ -1,91 +1,86 @@
 <template>
-  <section v-if="isLoading" class="loading"></section>
-  <section v-else class="question">
-    <div v-if="indexCurrentQuestion === 9" class="restart">
-      <p>pontuation: {{ correctAnswersCounter }}</p>
-      <button @click="restartGame">Restart</button>
-      <button @click="() => $router.push({ path: '/' })">Menu</button>
-    </div>
-    <div ref="trivia" v-else>
-      <span>{{ indexCurrentQuestion + 1 }}/ 10</span>
-      <div>
-        <p v-html="currentQuestion?.question" />
-        <button @click="checkResponse">True</button>
-        <button @click="checkResponse">False</button>
-      </div>
+  <section v-if="$store.state.game.isLoading" class="loading">
+    <div class="questionMark">
+      <div class="questionMark__dot"></div>
     </div>
   </section>
+  <Question v-else />
 </template>
 
 <script>
-function generateApiURL(categoryId) {
-  return `https://opentdb.com/api.php?amount=10&category=${categoryId}&type=boolean`;
-}
-
+import Question from "../components/Question.vue";
 export default {
+  components: { Question },
   name: "Trivia",
 
-  data() {
-    return {
-      questions: [],
-      isLoading: true,
-      indexCurrentQuestion: 0,
-      correctAnswersCounter: 0,
-    };
-  },
-
-  methods: {
-    checkResponse({ target: { innerText } }) {
-      const correctAnswer = this.currentQuestion.correct_answer;
-      if (correctAnswer === innerText) {
-        this.correctAnswersCounter++;
-        this.$refs.trivia.classList.add("correctAnswer");
-      } else {
-        this.$refs.trivia.classList.add("wrongAnswer");
-      }
-      this.nextQuestion();
-    },
-
-    nextQuestion() {
-      setTimeout(() => {
-        if (this.indexCurrentQuestion < 9) {
-          this.indexCurrentQuestion++;
-          this.$refs.trivia.classList.remove("wrongAnswer", "correctAnswer");
-        }
-      }, 1000);
-    },
-
-    restartGame() {
-      this.questions = [];
-      this.isLoading = true;
-      this.indexCurrentQuestion = 0;
-      this.correctAnswersCounter = 0;
-      this.getGamesfromApi();
-    },
-
-    async getGamesfromApi() {
-      const categoryId = this.$route.params.id;
-      const res = await fetch(generateApiURL(categoryId));
-      const data = await res.json();
-
-      const questions = data.results;
-
-      this.questions = questions;
-      this.indexCurrentQuestion = 0;
-      this.isLoading = false;
-    },
-  },
-
-  async beforeMount() {
-    this.getGamesfromApi();
-  },
-
-  computed: {
-    currentQuestion: function () {
-      return this.questions[this.indexCurrentQuestion];
-    },
+  async mounted() {
+    const categoryId = this.$route.params.id;
+    this.$store.dispatch("getGamesfromApi", categoryId);
   },
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="scss" scoped>
+@keyframes jumpQuestionMark {
+  from {
+    transform: translateY(25%) scaleY(0.95);
+  }
+
+  30% {
+    transform: translateY(40%) scaleY(0.85);
+  }
+
+  60% {
+    transform: translateY(5%) scaleY(1.01);
+  }
+
+  to {
+    transform: translateY(25%) scaleY(0.95);
+  }
+}
+
+.questionMark {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: 15px solid red;
+  margin: auto;
+  border-radius: 50%;
+  animation: jumpQuestionMark 1.5s infinite;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -15px;
+    bottom: -20px;
+    width: 60px;
+    height: 50px;
+    background-color: white;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 68.5px;
+    left: 27.8px;
+    width: 0px;
+    height: 30px;
+    border-top: 15px solid red;
+    border-left: 18px solid red;
+    margin: auto;
+    border-radius: 100% 0 0 0;
+    z-index: 2;
+  }
+
+  .questionMark__dot {
+    position: absolute;
+    top: 120px;
+    left: 37px;
+    width: 25px;
+    height: 25px;
+    background-color: red;
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+}
+</style>
