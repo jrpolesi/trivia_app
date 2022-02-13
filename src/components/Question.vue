@@ -2,19 +2,20 @@
   <section>
     <TriviaFinished v-if="$store.state.game.indexCurrentQuestion === 9" />
     <div v-else class="trivia">
-      <canvas
-        width="70"
-        height="70"
-        class="responseAnimation"
-        v-show="showAnimation"
-        ref="triviaResponseAnimation"
-      ></canvas>
       <span class="trivia__counter"
         >{{ $store.state.game.indexCurrentQuestion + 1 }} / 10</span
       >
       <div class="trivia__question">
         <p v-html="$store.getters.currentQuestion?.question" />
         <canvas
+          v-show="showAnimation"
+          width="70"
+          height="70"
+          class="responseAnimation"
+          ref="triviaResponseAnimation"
+        ></canvas>
+        <canvas
+          v-show="!showAnimation"
           width="160"
           height="160"
           class="question__timer"
@@ -57,8 +58,8 @@ export default {
 
   methods: {
     checkResponse({ target: { innerText } }) {
-      const correctAnswer = this.$store.getters.currentQuestion.correct_answer;
       this.showAnimation = true;
+      const correctAnswer = this.$store.getters.currentQuestion.correct_answer;
       if (correctAnswer === innerText) {
         this.$store.state.game.correctAnswersCounter++;
         this.handleCorrectAnswerAnimation();
@@ -251,9 +252,9 @@ export default {
     nextQuestion() {
       setTimeout(() => {
         if (this.$store.state.game.indexCurrentQuestion < 9) {
-          this.$store.commit("nextQuestion");
           this.showAnimation = false;
           this.timer = 10;
+          this.$store.commit("nextQuestion");
         }
       }, 1500);
     },
@@ -299,14 +300,7 @@ export default {
   max-width: 640px;
 
   .responseAnimation {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
     padding: 50px;
-    background-color: white;
-    border: 5px solid rgb(85, 85, 85);
-    border-radius: 50%;
   }
 
   .trivia__counter {

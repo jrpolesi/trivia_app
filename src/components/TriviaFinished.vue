@@ -11,10 +11,8 @@ export default {
   name: "Question",
   methods: {
     restartGame() {
-      const categoryId = this.$route.params.id;
-      this.$store.dispatch("getGamesfromApi", categoryId);
+      this.$store.commit("setQuestions", []);
       this.$store.state.game.correctAnswersCounter = 0;
-      this.$store.commit("setIsLoading", true);
     },
   },
 };

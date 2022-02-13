@@ -12,7 +12,7 @@ export default createStore({
     },
     game: {
       questions: [],
-      isLoading: true,
+      isLoading: false,
       showAnimation: false,
       indexCurrentQuestion: undefined,
       correctAnswersCounter: 0,

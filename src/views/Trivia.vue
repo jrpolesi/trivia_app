@@ -4,7 +4,16 @@
       <div class="questionMark__dot"></div>
     </div>
   </section>
-  <Question v-else />
+  <div v-if="$store.state.game.questions.length > 0">
+    <Question />
+  </div>
+  <div
+    v-else-if="
+      $store.state.game.questions.length === 0 && !$store.state.game.isLoading
+    "
+  >
+    <button @click="startGame">START</button>
+  </div>
 </template>
 
 <script>
@@ -12,10 +21,12 @@ import Question from "../components/Question.vue";
 export default {
   components: { Question },
   name: "Trivia",
-
-  async mounted() {
-    const categoryId = this.$route.params.id;
-    this.$store.dispatch("getGamesfromApi", categoryId);
+  methods: {
+    startGame() {
+      const categoryId = this.$route.params.id;
+      this.$store.commit("setIsLoading", true);
+      this.$store.dispatch("getGamesfromApi", categoryId);
+    },
   },
 };
 </script>
