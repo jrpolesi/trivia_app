@@ -9,8 +9,6 @@
         <p v-html="$store.getters.currentQuestion?.question" />
         <canvas
           v-show="showAnimation"
-          width="70"
-          height="70"
           class="responseAnimation"
           ref="triviaResponseAnimation"
         ></canvas>
@@ -70,17 +68,22 @@ export default {
     },
 
     drawWrongAnswer(canvas, ctx, drawGuide) {
-      console.log("wrongDraw");
+      const reverseDrawGuide = {
+        start: { x: drawGuide.start.x, y: drawGuide.finish.y },
+        finish: { x: drawGuide.finish.x, y: drawGuide.start.y },
+      };
+      if (
+        reverseDrawGuide.finish.x === drawGuide.currentPosition.x &&
+        reverseDrawGuide.finish.y === drawGuide.currentPosition.y
+      ) {
+        drawGuide.isFinish = true;
+      }
+
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.beginPath();
       ctx.moveTo(drawGuide.start.x, drawGuide.start.y);
-
-      const reverseDrawGuide = {
-        start: { x: drawGuide.start.x, y: drawGuide.finish.y },
-        finish: { x: drawGuide.finish.x, y: drawGuide.start.y },
-      };
 
       if (drawGuide.nextLine) {
         ctx.lineTo(drawGuide.finish.x, drawGuide.finish.y);
@@ -112,19 +115,18 @@ export default {
       }
 
       ctx.strokeStyle = "red";
-      ctx.lineWidth = "8";
+      ctx.lineWidth = "13";
       ctx.stroke();
-
-      if (
-        reverseDrawGuide.finish.x === drawGuide.currentPosition.x &&
-        reverseDrawGuide.finish.y === drawGuide.currentPosition.y
-      ) {
-        drawGuide.isFinish = true;
-      }
     },
 
     drawCorrectAnswer(canvas, ctx, drawGuide) {
-      console.log("correctDraw");
+      if (
+        drawGuide.finish.x === Math.trunc(drawGuide.currentPosition.x) &&
+        drawGuide.finish.y === Math.trunc(drawGuide.currentPosition.y)
+      ) {
+        drawGuide.isFinish = true;
+      }
+
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -151,15 +153,8 @@ export default {
       }
 
       ctx.strokeStyle = "green";
-      ctx.lineWidth = "8";
+      ctx.lineWidth = "13";
       ctx.stroke();
-
-      if (
-        drawGuide.finish.x === Math.trunc(drawGuide.currentPosition.x) &&
-        drawGuide.finish.y === Math.trunc(drawGuide.currentPosition.y)
-      ) {
-        drawGuide.isFinish = true;
-      }
     },
 
     handleWrongAnswerAnimation() {
@@ -167,16 +162,19 @@ export default {
       const ctx = canvas.getContext("2d");
 
       const drawGuide = {
-        start: { x: 10, y: 0 },
+        start: { x: 5, y: 5 },
 
-        finish: { x: 55, y: 60 },
+        finish: { x: 105, y: 105 },
 
-        currentPosition: { x: 10, y: 0 },
+        currentPosition: { x: 5, y: 5 },
 
         nextLine: false,
 
         isFinish: false,
       };
+
+      canvas.width = drawGuide.finish.x + 5;
+      canvas.height = drawGuide.finish.y + 5;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -193,16 +191,19 @@ export default {
       const ctx = canvas.getContext("2d");
 
       const drawGuide = {
-        start: { x: 10, y: 20 },
+        start: { x: 5, y: 25 },
 
-        curvePoint: { x: 35, y: 47 },
+        curvePoint: { x: 45, y: 62 },
 
-        finish: { x: 85, y: 5 },
+        finish: { x: 120, y: 5 },
 
         isFinish: false,
 
-        currentPosition: { x: 10, y: 20 },
+        currentPosition: { x: 5, y: 25 },
       };
+
+      canvas.width = drawGuide.finish.x + 5;
+      canvas.height = drawGuide.curvePoint.y + 10;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -211,7 +212,7 @@ export default {
         if (drawGuide.isFinish) {
           clearInterval(intervalId);
         }
-      }, 25);
+      }, 20);
     },
     drawTimer() {
       const canvas = this.$refs.timer;
