@@ -1,5 +1,6 @@
 <template>
   <section v-if="$store.state.game.isLoading" class="loading">
+    <h1>Loading ...</h1>
     <div class="questionMark">
       <div class="questionMark__dot"></div>
     </div>
@@ -50,48 +51,68 @@ export default {
   }
 }
 
-.questionMark {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  border: 15px solid red;
-  margin: auto;
-  border-radius: 50%;
-  animation: jumpQuestionMark 1.5s infinite;
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%, -50%);
 
-  &::after {
-    content: "";
-    position: absolute;
-    left: -15px;
-    bottom: -20px;
-    width: 60px;
-    height: 50px;
-    background-color: white;
+  h1 {
+    text-indent: 20px;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 40px;
   }
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 68.5px;
-    left: 27.8px;
-    width: 0px;
-    height: 30px;
-    border-top: 15px solid red;
-    border-left: 18px solid red;
+  .questionMark {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 15px solid red;
     margin: auto;
-    border-radius: 100% 0 0 0;
-    z-index: 2;
+    border-radius: 50%;
+    animation: jumpQuestionMark 1.5s infinite;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: -15px;
+      bottom: -20px;
+      width: 60px;
+      height: 50px;
+      background-color: white;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 68.5px;
+      left: 27.8px;
+      width: 0px;
+      height: 30px;
+      border-top: 15px solid red;
+      border-left: 18px solid red;
+      margin: auto;
+      border-radius: 100% 0 0 0;
+      z-index: 2;
+    }
+
+    .questionMark__dot {
+      position: absolute;
+      top: 120px;
+      left: 37px;
+      width: 25px;
+      height: 25px;
+      background-color: red;
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
   }
 
-  .questionMark__dot {
-    position: absolute;
-    top: 120px;
-    left: 37px;
-    width: 25px;
-    height: 25px;
-    background-color: red;
-    border-radius: 50%;
-    transform: translateX(-50%);
+  @media screen and (min-width: 600px) {
+    h1 {
+      font-size: 55px;
+    }
   }
 }
 </style>
