@@ -44,7 +44,7 @@ export default createStore({
         const data = await res.json();
 
         const questions = data.results;
-        console.log(questions)
+
         commit("setQuestions", questions);
         commit("setIndexCurrentQuestion", 0);
         commit("setIsLoading", false);

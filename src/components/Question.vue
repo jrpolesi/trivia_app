@@ -2,20 +2,35 @@
   <section>
     <TriviaFinished v-if="$store.state.game.indexCurrentQuestion === 9" />
     <div v-else class="trivia">
-      <canvas v-show="showAnimation" ref="triviaResponseAnimation"></canvas>
-      <span>{{ $store.state.game.indexCurrentQuestion + 1 }}/ 10</span>
+      <canvas
+        width="70"
+        height="70"
+        class="responseAnimation"
+        v-show="showAnimation"
+        ref="triviaResponseAnimation"
+      ></canvas>
+      <span class="trivia__counter"
+        >{{ $store.state.game.indexCurrentQuestion + 1 }} / 10</span
+      >
       <div class="trivia__question">
         <p v-html="$store.getters.currentQuestion?.question" />
-        <div class="question__timer">{{ timer }}</div>
+        <canvas
+          width="160"
+          height="160"
+          class="question__timer"
+          ref="timer"
+        ></canvas>
         <div class="question__buttons">
           <button
             class="question__button question__button--true"
+            :disabled="showAnimation"
             @click="checkResponse"
           >
             True
           </button>
           <button
             class="question__button question__button--false"
+            :disabled="showAnimation"
             @click="checkResponse"
           >
             False
@@ -35,7 +50,7 @@ export default {
   data() {
     return {
       showAnimation: false,
-      timer: 10,
+      timer: undefined,
       timerIntervalId: null,
     };
   },
@@ -54,7 +69,10 @@ export default {
     },
 
     drawWrongAnswer(canvas, ctx, drawGuide) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      console.log("wrongDraw");
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       ctx.beginPath();
       ctx.moveTo(drawGuide.start.x, drawGuide.start.y);
 
@@ -97,15 +115,17 @@ export default {
       ctx.stroke();
 
       if (
-        reverseDrawGuide.finish.x === drawGuide.currentPosition.x - 4.5 &&
-        reverseDrawGuide.finish.y === drawGuide.currentPosition.y + 6
+        reverseDrawGuide.finish.x === drawGuide.currentPosition.x &&
+        reverseDrawGuide.finish.y === drawGuide.currentPosition.y
       ) {
         drawGuide.isFinish = true;
       }
     },
 
     drawCorrectAnswer(canvas, ctx, drawGuide) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      console.log("correctDraw");
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.beginPath();
       ctx.moveTo(drawGuide.start.x, drawGuide.start.y);
@@ -157,6 +177,8 @@ export default {
         isFinish: false,
       };
 
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       const intervalId = setInterval(() => {
         this.drawWrongAnswer(canvas, ctx, drawGuide);
         if (drawGuide.isFinish) {
@@ -170,16 +192,18 @@ export default {
       const ctx = canvas.getContext("2d");
 
       const drawGuide = {
-        start: { x: 0, y: 20 },
+        start: { x: 10, y: 20 },
 
-        curvePoint: { x: 25, y: 47 },
+        curvePoint: { x: 35, y: 47 },
 
-        finish: { x: 75, y: 5 },
+        finish: { x: 85, y: 5 },
 
         isFinish: false,
 
-        currentPosition: { x: 0, y: 20 },
+        currentPosition: { x: 10, y: 20 },
       };
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const intervalId = setInterval(() => {
         this.drawCorrectAnswer(canvas, ctx, drawGuide);
@@ -187,6 +211,41 @@ export default {
           clearInterval(intervalId);
         }
       }, 25);
+    },
+    drawTimer() {
+      const canvas = this.$refs.timer;
+      const ctx = canvas.getContext("2d");
+      let currentPosition = 2.5;
+      const drawCircle = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.beginPath();
+        ctx.arc(80, 80, 70, 0, 2 * Math.PI);
+        ctx.strokeStyle = "#CCCCCC";
+        ctx.lineWidth = "12";
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(80, 80, 70, 1.6, currentPosition * Math.PI);
+        ctx.strokeStyle = "#00d2be";
+        ctx.lineWidth = "12";
+        ctx.stroke();
+
+        ctx.font = "38px arial";
+        ctx.textAlign = "center";
+        ctx.fillText(this.timer, 80, 90);
+
+        currentPosition -= 0.002;
+      };
+
+      const intervalId = setInterval(() => {
+        if (this.showAnimation) clearInterval(intervalId);
+        if (this.timer > 0) {
+          drawCircle();
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 10);
     },
 
     nextQuestion() {
@@ -200,13 +259,19 @@ export default {
     },
   },
 
+  mounted() {
+    this.drawTimer();
+  },
+
   watch: {
     "$store.state.game.indexCurrentQuestion": {
       handler: function () {
         if (this.timerIntervalId) {
           clearInterval(this.timerIntervalId);
-          this.timerIntervalId = 10;
         }
+        if (this.timer === 10) this.drawTimer();
+
+        this.timer = 10;
 
         this.timerIntervalId = setInterval(() => {
           if (this.timer > 0) {
@@ -217,7 +282,6 @@ export default {
             this.nextQuestion();
           }
         }, 1000);
-        console.log(this.$store.state.game.indexCurrentQuestion);
       },
       immediate: true,
     },
@@ -226,32 +290,62 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.trivia__question {
+.trivia {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 20px;
+  margin: auto;
+  padding: 20px 15px;
+  max-width: 640px;
 
-  p {
-    font-size: 24px;
-    text-align: center;
-    padding: 15px;
+  .responseAnimation {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    padding: 50px;
+    background-color: white;
+    border: 5px solid rgb(85, 85, 85);
+    border-radius: 50%;
   }
 
-  .question__buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+  .trivia__counter {
+    display: block;
+    font-size: 22px;
+    font-weight: 500;
+    align-self: flex-end;
+  }
 
-    .question__button {
-      width: 100px;
-      height: 40px;
-      border-radius: 5px;
-      border: none;
-      background-color: rgb(61, 138, 226);
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
+  .trivia__question {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    height: 90vh;
+    max-height: 600px;
+
+    p {
+      font-size: 26px;
+      text-align: center;
+    }
+
+    .question__buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+
+      .question__button {
+        width: 115px;
+        height: 50px;
+        border-radius: 5px;
+        border: none;
+        background-color: rgb(61, 138, 226);
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+      }
     }
   }
 }
