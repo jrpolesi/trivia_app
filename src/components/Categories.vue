@@ -68,7 +68,7 @@ export default {
   top: 20px;
   left: 50%;
   width: 95%;
-  max-width: 1150px;
+  max-width: 1250px;
   transform: translateX(-50%);
 
   h1 {
@@ -110,6 +110,21 @@ export default {
         font-weight: 500;
         letter-spacing: 0.95px;
         height: 50px;
+      }
+    }
+  }
+
+  @media screen and (min-width: 770px) {
+    top: 15%;
+
+    h1 {
+      font-size: 55px;
+      margin-bottom: 80px;
+    }
+
+    .category__list {
+      li {
+        width: 220px;
       }
     }
   }
