@@ -1,9 +1,9 @@
 <template>
   <section v-if="$store.state.game.isLoading" class="loading">
-    <h1>Loading ...</h1>
     <div class="questionMark">
       <div class="questionMark__dot"></div>
     </div>
+    <h1>Loading ...</h1>
   </section>
   <div v-if="$store.state.game.questions.length > 0">
     <Question />
@@ -54,16 +54,15 @@ export default {
 }
 
 .loading {
-  position: absolute;
-  left: 50%;
-  top: 35%;
+  margin-top: 40vh;
+  margin-left: 50vw;
   transform: translate(-50%, -50%);
 
   h1 {
     text-indent: 20px;
     font-size: 28px;
     text-align: center;
-    margin-bottom: 40px;
+    margin-top: 140px;
   }
 
   .questionMark {
@@ -114,12 +113,7 @@ export default {
   @media screen and (min-width: 420px) {
     h1 {
       font-size: 40px;
-    }
-  }
-
-  @media screen and (min-width: 560px) {
-    h1 {
-      font-size: 54px;
+      margin-top: 150px;
     }
   }
 }
@@ -147,7 +141,7 @@ export default {
     background-color: rgb(75, 150, 236);
     cursor: pointer;
 
-    &:hover{
+    &:hover {
       filter: brightness(1.08);
     }
   }
