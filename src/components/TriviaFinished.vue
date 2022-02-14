@@ -2,7 +2,7 @@
   <div class="restart">
     <p>pontuation: {{ $store.state.game.correctAnswersCounter }}</p>
     <button @click="restartGame">Restart</button>
-    <button @click="() => $router.push({ path: '/' })">Menu</button>
+    <button @click="goToMenu">Menu</button>
   </div>
 </template>
 
@@ -13,6 +13,12 @@ export default {
     restartGame() {
       this.$store.commit("setQuestions", []);
       this.$store.state.game.correctAnswersCounter = 0;
+    },
+
+    goToMenu() {
+      this.$store.commit("setQuestions", []);
+      this.$store.state.game.correctAnswersCounter = 0;
+      this.$router.push({ path: "/" });
     },
   },
 };
