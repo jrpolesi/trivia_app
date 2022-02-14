@@ -56,7 +56,6 @@ export default {
 
   methods: {
     checkResponse({ target: { innerText } }) {
-      console.log(this.timer);
 
       this.showAnimation = true;
       const correctAnswer = this.$store.getters.currentQuestion.correct_answer;
