@@ -1,6 +1,7 @@
 <template>
-  <section>
-    <ul class="categoryList">
+  <section class="category">
+    <h1>Choose a category</h1>
+    <ul class="category__list">
       <li
         v-for="(category, index) of categories"
         :key="index"
@@ -24,31 +25,31 @@ export default {
           id: 9,
           name: "General Knowledge",
           image: "./assets/icons/all.svg",
-          backgroundColor: "blue",
+          backgroundColor: "#355dcb",
         },
         {
           id: 11,
           name: "Film",
           image: "./assets/icons/film.svg",
-          backgroundColor: "red",
+          backgroundColor: "#f73838",
         },
         {
           id: 12,
           name: "Music",
           image: "./assets/icons/music.svg",
-          backgroundColor: "grey",
+          backgroundColor: "#3c3c3c",
         },
         {
           id: 15,
           name: "Video Games",
           image: "./assets/icons/game.svg",
-          backgroundColor: "purple",
+          backgroundColor: "#7332a5",
         },
         {
           id: 17,
           name: "Science & Nature",
           image: "./assets/icons/science.svg",
-          backgroundColor: "orange",
+          backgroundColor: "#4f813b",
         },
       ],
     };
@@ -62,31 +63,54 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.categoryList {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  list-style: none;
-  padding: 0;
+.category {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 95%;
+  max-width: 1150px;
+  transform: translateX(-50%);
 
-  li {
+  h1 {
+    font-size: 45px;
+    font-weight: 500;
+    color: #444444;
+    text-align: center;
+    margin: 0px 0 30px;
+  }
+
+  .category__list {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
-    width: 200px;
-    height: 180px;
-    padding: 10px 0 15px;
-    border-radius: 10px;
-    cursor: pointer;
+    row-gap: 20px;
+    list-style: none;
+    padding: 15px 15px 25px;
 
-    h3 {
+    li {
+      flex-shrink: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      color: white;
-      font-size: 25px;
-      text-align: center;
-      height: 50px;
+      gap: 20px;
+      width: 260px;
+      height: 190px;
+      padding: 15px 10px 20px;
+      border-radius: 20px;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+
+      h3 {
+        display: flex;
+        align-items: center;
+        color: white;
+        font-size: 25px;
+        text-align: center;
+        font-weight: 500;
+        letter-spacing: 0.95px;
+        height: 50px;
+      }
     }
   }
 }
