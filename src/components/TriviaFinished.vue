@@ -71,6 +71,11 @@ export default {
       color: white;
       border: none;
       border-radius: 8px;
+      cursor: pointer;
+
+      &:hover {
+        filter: brightness(1.08);
+      }
     }
   }
 }
