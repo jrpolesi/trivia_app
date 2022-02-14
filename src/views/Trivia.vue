@@ -12,7 +12,9 @@
     v-else-if="
       $store.state.game.questions.length === 0 && !$store.state.game.isLoading
     "
+    class="trivia__startScreen"
   >
+    <h1>Are you ready?</h1>
     <button @click="startGame">START</button>
   </div>
 </template>
@@ -109,9 +111,44 @@ export default {
     }
   }
 
-  @media screen and (min-width: 600px) {
+  @media screen and (min-width: 420px) {
     h1 {
-      font-size: 55px;
+      font-size: 40px;
+    }
+  }
+
+  @media screen and (min-width: 560px) {
+    h1 {
+      font-size: 54px;
+    }
+  }
+}
+
+.trivia__startScreen {
+  width: 95%;
+  max-width: 500px;
+  margin: 20vh auto;
+
+  h1 {
+    text-align: center;
+    font-size: 40px;
+  }
+
+  button {
+    display: block;
+    margin: 60px auto;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(75, 150, 236);
+    cursor: pointer;
+
+    &:hover{
+      filter: brightness(1.08);
     }
   }
 }
