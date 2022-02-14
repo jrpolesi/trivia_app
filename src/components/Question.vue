@@ -22,14 +22,14 @@
         <div class="question__buttons">
           <button
             class="question__button question__button--true"
-            :disabled="showAnimation"
+            :disabled="showAnimation || timer < 1"
             @click="checkResponse"
           >
             True
           </button>
           <button
             class="question__button question__button--false"
-            :disabled="showAnimation"
+            :disabled="showAnimation || timer < 1"
             @click="checkResponse"
           >
             False
@@ -56,6 +56,8 @@ export default {
 
   methods: {
     checkResponse({ target: { innerText } }) {
+      console.log(this.timer);
+
       this.showAnimation = true;
       const correctAnswer = this.$store.getters.currentQuestion.correct_answer;
       if (correctAnswer === innerText) {
@@ -245,6 +247,7 @@ export default {
         if (this.timer > 0) {
           drawCircle();
         } else {
+          drawCircle();
           clearInterval(intervalId);
         }
       }, 10);
@@ -276,9 +279,10 @@ export default {
         this.timer = 10;
 
         this.timerIntervalId = setInterval(() => {
-          if (this.timer > 0) {
+          if (this.timer > 0 && !this.showAnimation) {
             this.timer--;
-          } else {
+          } else if (this.timer === 0) {
+            this.timer--;
             clearInterval(this.timerIntervalId);
             this.timerIntervalId = null;
             this.nextQuestion();
@@ -340,6 +344,10 @@ export default {
         color: white;
         font-size: 24px;
         cursor: pointer;
+
+        &:hover {
+          filter: brightness(1.08);
+        }
       }
     }
   }
