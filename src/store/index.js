@@ -35,6 +35,10 @@ export default createStore({
     nextQuestion(state) {
       state.game.indexCurrentQuestion++;
     },
+
+    setCorrectAnswersCounter(state, counter) {
+      state.game.correctAnswersCounter = counter;
+    },
   },
 
   actions: {

@@ -1,6 +1,9 @@
 <template>
   <section>
-    <TriviaFinished v-if="$store.state.game.indexCurrentQuestion === 9" />
+    <TriviaFinished
+      v-if="$store.state.game.indexCurrentQuestion === 9"
+      :intervalId="timerIntervalId"
+    />
     <div v-else class="trivia">
       <span class="trivia__counter"
         >{{ $store.state.game.indexCurrentQuestion + 1 }} / 10</span
@@ -276,16 +279,18 @@ export default {
 
         this.timer = 10;
 
-        this.timerIntervalId = setInterval(() => {
-          if (this.timer > 0 && !this.showAnimation) {
-            this.timer--;
-          } else if (this.timer === 0) {
-            this.timer--;
-            clearInterval(this.timerIntervalId);
-            this.timerIntervalId = null;
-            this.nextQuestion();
-          }
-        }, 1000);
+        if (this.$store.state.game.indexCurrentQuestion !== undefined) {
+          this.timerIntervalId = setInterval(() => {
+            if (this.timer > 0 && !this.showAnimation) {
+              this.timer--;
+            } else if (this.timer === 0) {
+              this.timer--;
+              clearInterval(this.timerIntervalId);
+              this.timerIntervalId = null;
+              this.nextQuestion();
+            }
+          }, 1000);
+        }
       },
       immediate: true,
     },

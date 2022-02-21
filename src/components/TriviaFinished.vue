@@ -15,15 +15,20 @@
 <script>
 export default {
   name: "Question",
+  props: ["timerIntervalId"],
   methods: {
     restartGame() {
+      clearInterval(this.timerIntervalId);
       this.$store.commit("setQuestions", []);
-      this.$store.state.game.correctAnswersCounter = 0;
+      this.$store.commit("setCorrectAnswersCounter", 0);
     },
 
     goToMenu() {
+      clearInterval(this.timerIntervalId);
       this.$store.commit("setQuestions", []);
-      this.$store.state.game.correctAnswersCounter = 0;
+      this.$store.commit("setCorrectAnswersCounter", 0);
+      this.$store.commit("setIndexCurrentQuestion", undefined);
+      this.$store.commit("setIsLoading", false);
       this.$router.push({ path: "/" });
     },
   },
