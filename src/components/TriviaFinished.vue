@@ -21,6 +21,8 @@ export default {
       clearInterval(this.timerIntervalId);
       this.$store.commit("setQuestions", []);
       this.$store.commit("setCorrectAnswersCounter", 0);
+      this.$store.commit("setIndexCurrentQuestion", undefined);
+      this.$store.commit("setIsLoading", false);
     },
 
     goToMenu() {
