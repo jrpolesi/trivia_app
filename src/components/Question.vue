@@ -1,7 +1,7 @@
 <template>
   <section>
     <TriviaFinished
-      v-if="$store.state.game.indexCurrentQuestion === 9"
+      v-if="$store.state.game.indexCurrentQuestion === 10"
       :intervalId="timerIntervalId"
     />
     <div v-else class="trivia">
@@ -256,7 +256,7 @@ export default {
 
     nextQuestion() {
       setTimeout(() => {
-        if (this.$store.state.game.indexCurrentQuestion < 9) {
+        if (this.$store.state.game.indexCurrentQuestion < 10) {
           this.showAnimation = false;
           this.timer = 10;
           this.$store.commit("nextQuestion");
